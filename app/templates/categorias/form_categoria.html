@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">{{ titulo }}</h4>
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-6 mb-3">
+            <label>
+                <span class="text-danger">*</span>Nombre
+            </label>
+            {{ form.nombre }}
+        </div>
+    </div>
+
+    <p class="text-danger">( * ) Campo obligatorio</p>
+
+    <a href="{% url 'listar_categorias' %}" class="btn btn-primary">
+        Volver
+    </a>
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+</form>
+{% endblock %}

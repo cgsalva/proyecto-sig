@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<h4>Productos</h4>
+<div class="mb-3">
+    <a href="{% url 'crear_producto' %}" class="btn btn-info">
+        Agregar
+    </a>
+    <a href="#" class="btn btn-success">Generar reporte</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock Actual</th>
+                <th>Stock Minimo</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio }}</td>
+                <td>{{ producto.stock_actual }}</td>
+                <td>{{ producto.stock_minimo }}</td>
+                <td>
+                    <a href="{% url 'editar_producto' producto.codigo %}" title="Modificar registro">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'eliminar_producto' producto.codigo %}" title="Eliminar registro"
+                        onclick="return confirm('¿Seguro que deseas eliminar este producto?')">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

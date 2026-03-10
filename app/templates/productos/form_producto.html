@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">{{ titulo }}</h4>
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-12 col-md-4 mb-3">
+            <label>
+                <span class="text-danger">*</span>Codigo
+            </label>
+            {{ form.codigo }}
+        </div>
+
+        <div class="col-12 col-md-8 mb-3">
+            <label>
+                <span class="text-danger">*</span>Nombre
+            </label>
+            {{ form.nombre }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label><span class="text-danger">*</span>Precio</label>
+            {{ form.precio }}
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+            <label><span class="text-danger">*</span>Categoría</label>
+            {{ form.categoria }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 mb-3">
+            <label><span class="text-danger">*</span>Stock Actual</label>
+            {{ form.stock_actual }}
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+            <label><span class="text-danger">*</span>Stock Minimo</label>
+            {{ form.stock_minimo }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción</label>
+        {{ form.descripcion }}
+    </div>
+
+    <p class="text-danger">( * ) Campo obligatorio</p>
+
+    <a href="{% url 'listar_productos' %}" class="btn btn-primary">
+        Volver
+    </a>
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+</form>
+{% endblock %}

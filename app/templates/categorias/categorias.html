@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<h4>Categorias</h4>
+<div class="mb-3">
+    <a href="{% url 'crear_categoria' %}" class="btn btn-info">
+        Agregar
+    </a>
+    <a href="#" class="btn btn-success">Generar reporte</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.id }}</td>
+                <td>{{ categoria.nombre }}</td>
+                <td>
+                    <a href="{% url 'editar_categoria' categoria.id %}" title="Modificar registro">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'eliminar_categoria' categoria.id %}" title="Eliminar registro"
+                        onclick="return confirm('¿Seguro que deseas eliminar esta categoria?')">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
