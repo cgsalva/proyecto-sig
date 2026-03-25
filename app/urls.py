@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import auth, dashboard, productos, categorias
+from .views import auth, dashboard, productos, categorias, clientes
 
 urlpatterns = [
     path("", auth.login_view, name="login"),
@@ -18,4 +18,10 @@ urlpatterns = [
     path("categorias/nuevo/", categorias.crear_categoria, name="crear_categoria"),
     path("categorias/editar/<int:id>/", categorias.editar_categoria, name="editar_categoria"),
     path("categorias/eliminar/<int:id>/", categorias.eliminar_categoria, name="eliminar_categoria"),
+
+    # Urls para clientes
+    path("clientes/", clientes.listar_clientes, name="listar_clientes"),
+    path("clientes/nuevo/", clientes.crear_cliente, name="crear_cliente"),
+    path("clientes/editar/<int:id>/", clientes.editar_cliente, name="editar_cliente"),
+    path("clientes/eliminar/<int:id>/", clientes.eliminar_cliente, name="eliminar_cliente"),
 ]

@@ -27,9 +27,7 @@ class Producto(models.Model):
 
 
 class Cliente(models.Model):
-    nombres = models.CharField(max_length=50)
-    apellidos = models.CharField(max_length=50)
-    dui = models.CharField(max_length=20, unique=True)
+    nombre = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     direccion = models.TextField(blank=True, null=True)
