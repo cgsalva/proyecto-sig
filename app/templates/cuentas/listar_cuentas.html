@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Cuentas{% endblock %}
+
+{% block content %}
+<h4>Cuentas</h4>
+<div class="mb-3">
+    <a href="{% url 'crear_cuenta' %}" class="btn btn-info">
+        Agregar
+    </a>
+    <a href="#" class="btn btn-success">Generar reporte</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cuenta in cuentas %}
+            <tr>
+                <td>{{ cuenta.codigo }}</td>
+                <td>{{ cuenta.nombre }}</td>
+                <td>{{ cuenta.tipo }}</td>
+                <td>
+                    <a href="{% url 'editar_cuenta' cuenta.codigo %}" title="Modificar registro">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'eliminar_cuenta' cuenta.codigo %}" title="Eliminar registro"
+                        onclick="return confirm('¿Seguro que deseas eliminar esta cuenta?')">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

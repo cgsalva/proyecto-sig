@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import auth, dashboard, productos, categorias, clientes, proveedores
+from .views import auth, dashboard, productos, categorias, clientes, cuentas
 
 urlpatterns = [
     path("", auth.login_view, name="login"),
@@ -25,9 +25,9 @@ urlpatterns = [
     path("clientes/editar/<int:id>/", clientes.editar_cliente, name="editar_cliente"),
     path("clientes/eliminar/<int:id>/", clientes.eliminar_cliente, name="eliminar_cliente"),
 
-    # Urls para proveedores
-    path("proveedores/", proveedores.listar_proveedores, name="listar_proveedores"),
-    path("proveedores/nuevo/", proveedores.crear_proveedor, name="crear_proveedor"),
-    path("proveedores/editar/<int:id>/", proveedores.editar_proveedor, name="editar_proveedor"),
-    path("proveedores/eliminar/<int:id>/", proveedores.eliminar_proveedor, name="eliminar_proveedor"),
+    # Urls para cuentas
+    path("cuentas/", cuentas.listar_cuentas, name="listar_cuentas"),
+    path("cuentas/nueva/", cuentas.crear_cuenta, name="crear_cuenta"),
+    path("cuentas/editar/<codigo>/", cuentas.editar_cuenta, name="editar_cuenta"),
+    path("cuentas/eliminar/<codigo>/", cuentas.eliminar_cuenta, name="eliminar_cuenta"),
 ]

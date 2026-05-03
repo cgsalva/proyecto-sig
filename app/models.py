@@ -37,18 +37,6 @@ class Cliente(models.Model):
         return f"{self.nombres} {self.apellidos}"
 
 
-class Proveedor(models.Model):
-    nombre = models.CharField(max_length=100)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    direccion = models.TextField(blank=True, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.nombre
-
-
 class Cuenta(models.Model):
     codigo = models.CharField(max_length=10, primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -57,10 +45,10 @@ class Cuenta(models.Model):
         ('pasivo', 'Pasivo'),
         ('patrimonio', 'Patrimonio'),
         ('ingreso', 'Ingreso'),
+        ('costos', 'Costos'),
         ('gasto', 'Gasto'),
     ]
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
-    descripcion = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.codigo} - {self.nombre}"
