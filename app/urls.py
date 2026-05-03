@@ -6,6 +6,11 @@ urlpatterns = [
     path("", auth.login_view, name="login"),
     path('logout/', auth.logout_view, name='logout'),
     path("dashboard/", dashboard.dashboard, name="dashboard"),
+
+    # Url para perfil de usuario
+    path("perfil/", auth.user_profile, name="user_profile"),
+    path("perfil/editar/", auth.edit_user_profile, name="edit_user_profile"),
+    path("perfil/change_password/", auth.change_password, name="change_password"),
     
     # Urls para productos
     path("productos/", productos.listar_productos, name="listar_productos"),

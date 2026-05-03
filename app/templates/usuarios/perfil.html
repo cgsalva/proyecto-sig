@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Cuentas{% endblock %}
+
+{% block content %}
+<h4>Perfil de usuario</h4>
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <img src="https://tienda.codigosdeprogramacion.com//images/blank-profile.png" class="img-thumbnail ">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ request.user.username }}</h5>
+                <table width="90%">
+                    <tr>
+                        <td width="30%"><b>Nombres:</b></td>
+                        <td width="70%">{{ request.user.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Apellidos:</b></td>
+                        <td>{{ request.user.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Email:</b></td>
+                        <td>{{ request.user.email }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="{% url 'edit_user_profile' %}" class="btn btn-success">Actualizar información</a>
+<a href="{% url 'change_password' %}" class="btn btn-info">Cambiar contraseña</a>
+{% endblock %}
