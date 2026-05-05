@@ -50,6 +50,7 @@
                 <div class="dropdown-menu" aria-labelledby="pagesDropdown">
                     <a class="dropdown-item" href="{% url 'listar_productos' %}">Productos</a>
                     <a class="dropdown-item" href="{% url 'listar_categorias' %}">Categorias</a>
+                    <a class="dropdown-item" href="{% url 'listar_unidades' %}">Unidades</a>
                 </div>
             </li>
 
@@ -73,8 +74,8 @@
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                    <a class="dropdown-item" href="#">Nueva compra</a>
-                    <a class="dropdown-item" href="#">Compras</a>
+                    <a class="dropdown-item" href="{% url 'nueva_compra' %}">Nueva compra</a>
+                    <a class="dropdown-item" href="{% url 'listar_compras' %}">Compras</a>
                 </div>
             </li>
 

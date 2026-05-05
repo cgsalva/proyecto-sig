@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h4 class="mb-4">{{ titulo }}</h4>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a href="{% url 'listar_unidades' %}" class="btn btn-info">Volver</a>
+    <button type="submit" class="btn btn-success">Guardar</button>
+</form>
+{% endblock %}
