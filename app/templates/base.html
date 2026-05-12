@@ -28,10 +28,13 @@
                     <span>{{ request.user.username }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{% url 'user_profile' %}"><i class="fas fa-fw fa-user"></i> Perfil</a>
-                    <a class="dropdown-item" href="{% url 'change_password' %}"><i class="fas fa-fw fa-key"></i> Cambiar contraseña</a>
+                    <a class="dropdown-item" href="{% url 'user_profile' %}"><i class="fas fa-fw fa-user"></i>
+                        Perfil</a>
+                    <a class="dropdown-item" href="{% url 'change_password' %}"><i class="fas fa-fw fa-key"></i> Cambiar
+                        contraseña</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Cerrar sesión</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-fw fa-sign-out-alt"></i> Cerrar
+                        sesión</a>
                 </div>
             </li>
         </ul>
@@ -79,29 +82,47 @@
                 </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'listar_cuentas' %}">
-                    <i class="fas fa-book"></i>
-                    <span>Cuentas</span>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Contabilidad</span>
                 </a>
+
+                <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                    <a class="dropdown-item" href="{% url 'listar_cuentas' %}">Catalogo de cuentas</a>
+                    <a class="dropdown-item" href="#">Asientos contables</a>
+                    <a class="dropdown-item" href="#">Libro diario</a>
+                    <a class="dropdown-item" href="#">Libro mayor</a>
+                    <a class="dropdown-item" href="#">Balances</a>
+                    <a class="dropdown-item" href="#">Estado de resultados</a>
+                </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Movimientos</span></a>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>Finanzas</span>
                 </a>
+
+                <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                    <a class="dropdown-item" href="#">#</a>
+                    <a class="dropdown-item" href="#">#</a>
+                    <a class="dropdown-item" href="#">#</a>
+                </div>
             </li>
+           
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'nueva_venta' %}">
                     <i class="fas fa-fw fa-cash-register"></i>
                     <span>Caja</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'listar_ventas' %}">
                     <i class="fas fa-fw fa-shopping-cart"></i>
                     <span>Ventas</span>
                 </a>
@@ -126,7 +147,7 @@
         </ul>
 
         <!-- CONTENIDO DE LA PAGINA -->
-        <div id="content-wrapper"> 
+        <div id="content-wrapper">
             <div class="container-fluid">
                 {% block content %}
                 {% endblock %}

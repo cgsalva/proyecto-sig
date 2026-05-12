@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<h4>Ventas</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha de Venta</th>
+            <th>Precio Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- {% for venta in ventas %} -->
+        <tr>
+            <td>{{ venta.id }}</td>
+            <td>{{ venta.precio_total }}</td>
+            <td>{{ venta.fecha_venta }}</td>
+        </tr>
+        <!-- {% endfor %} -->
+    </tbody>
+{% endblock %}
