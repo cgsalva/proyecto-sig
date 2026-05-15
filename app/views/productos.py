@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.db.models import Q
 from django import forms
 from ..models import Producto
 
@@ -26,6 +28,37 @@ def listar_productos(request):
     return render(request, "productos/productos.html", {
         "productos": productos
     })
+
+@login_required
+def obtener_producto(request, codigo):
+    producto = get_object_or_404(Producto, codigo=codigo)
+    data = {
+        "codigo": producto.codigo,
+        "nombre": producto.nombre,
+        "precio": str(producto.precio),
+        "stock_actual": producto.stock_actual
+    }
+    return JsonResponse(data)
+
+@login_required
+def productos_autocomplete(request):
+    termino = request.GET.get("q", "")
+
+    productos = Producto.objects.filter(
+        Q(codigo__icontains=termino) |
+        Q(nombre__icontains=termino)
+    )[:5]
+
+    data = list(
+        productos.values(
+            "codigo",
+            "nombre",
+            "precio",
+            "stock_actual"
+        )
+    )
+
+    return JsonResponse(data, safe=False)
 
 @login_required
 def crear_producto(request):

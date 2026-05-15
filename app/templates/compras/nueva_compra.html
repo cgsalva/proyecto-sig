@@ -83,6 +83,7 @@
     </div>
 </form>
 
+<!-- Modal para buscar producto -->
 <div class="modal fade" id="modalBuscarProducto" tabindex="-1" aria-labelledby="modalBuscarProductoLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -98,18 +99,19 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Escribe el código o el nombre del producto">
+                    <input type="text" class="form-control" id="buscar_producto"
+                        placeholder="Escribe el código o el nombre del producto" autocomplete="off">
                 </div>
                 <table style="width: 100%" class="table table-sm" id="tablaProductos">
                     <thead>
                         <tr>
-                            <th style="width: 45%">Descripción</th>
+                            <th>Descripcion</th>
                             <th style="width: 20%">Precio</th>
-                            <th style="width: 20%">Existencia</th>
+                            <th style="width: 20%">Existencias</th>
                             <th style="width: 15%"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="resultados">
 
                     </tbody>
                 </table>
@@ -120,4 +122,75 @@
         </div>
     </div>
 </div>
+
+<script>
+    const buscarProducto = document.getElementById('buscar_producto');
+    const resultados = document.getElementById('resultados');
+
+    let productoSeleccionado;
+    let debounceTimer;
+
+    async function fetchProducts(query) {
+        if (!query) {
+            resultados.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/productos/autocomplete/?q=${query}`);
+            const data = await response.json();
+
+            renderResults(data);
+        } catch (error) {
+            console.error('Error al buscar productos:', error);
+            resultados.innerHTML = '<p>Error al cargar resultados.</p>';
+        }
+    }
+
+    // Función para mostrar los productos en el HTML
+    function renderResults(products) {
+        resultados.innerHTML = '';
+
+        if (products.length === 0) {
+            resultados.innerHTML = '<p>No se encontraron coincidencias.</p>';
+            return;
+        }
+
+        products.forEach(product => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td>${product.nombre}</td>
+            <td>$${product.precio}</td>
+            <td>${product.stock_actual}</td>
+            <td><button class="btn btn-success btn-sm" onclick="seleccionarProducto('${product.codigo}')"><span class="fas fa-plus"></span></button></td>
+        </tr>
+        `;
+            resultados.appendChild(tr);
+        });
+    }
+
+    // Evento de escucha con Debounce
+    buscarProducto.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            fetchProducts(query);
+        }, 300); // Espera 300ms después de que el usuario deja de escribir
+    });
+
+    async function obtenerProducto(codigo) {
+        try {
+            const response = await fetch(`/productos/obtener/${codigo}/`);
+            if (!response.ok) {
+                throw new Error('Producto no encontrado');
+            }
+            const producto = await response.json();
+            return producto;
+        } catch (error) {
+            console.error('Error al obtener producto:', error);
+            return null;
+        }
+    }
+</script>
 {% endblock %}

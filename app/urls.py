@@ -17,6 +17,8 @@ urlpatterns = [
     path("productos/nuevo/", productos.crear_producto, name="crear_producto"),
     path("productos/editar/<codigo>/", productos.editar_producto, name="editar_producto"),
     path("productos/eliminar/<codigo>/", productos.eliminar_producto, name="eliminar_producto"),
+    path("productos/obtener/<codigo>/", productos.obtener_producto, name="obtener_producto"),
+    path("productos/autocomplete/", productos.productos_autocomplete, name="productos_autocomplete"),
 
     # Urls para categorias
     path("categorias/", categorias.listar_categorias, name="listar_categorias"),

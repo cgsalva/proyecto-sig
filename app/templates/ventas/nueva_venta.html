@@ -14,7 +14,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Escribe el código y presiona enter">
+                <input type="text" class="form-control" id="codigo" placeholder="Escribe el código y presiona enter"
+                    autocomplete="off">
                 <div class="input-group-append">
                     <button class="btn btn-light" type="button" data-toggle="modal"
                         data-target="#modalBuscarProducto"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -31,7 +32,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-dollar-sign"></i></span>
                 </div>
-                <input class="form-control form-control-sm" type="number" value="0.00" step="0.01" readonly />
+                <input class="form-control form-control-sm" id="precio" type="number" value="0.00" step="0.01" readonly />
             </div>
         </div>
     </div>
@@ -44,11 +45,11 @@
     </div>
     <div class="row">
         <div class="col-12 mb-3">
-            <button id="agregar_producto" type="button" class="btn btn-primary">Agregar Producto</button>
+            <button type="button" class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
         </div>
     </div>
 
-    <table id="tablaProductosVenta" class="table table-hover table-striped table-sm">
+    <table id="tablaProductosVenta" class="table table-hover table-sm">
         <thead class="thead-dark">
             <tr>
                 <th>#</th>
@@ -60,7 +61,7 @@
                 <th width='1%'></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="detalle_venta">
         </tbody>
     </table>
 
@@ -74,6 +75,7 @@
     </div>
 </form>
 
+<!-- Modal para buscar producto -->
 <div class="modal fade" id="modalBuscarProducto" tabindex="-1" aria-labelledby="modalBuscarProductoLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -89,18 +91,20 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Escribe el código o el nombre del producto">
+                    <input type="text" class="form-control" id="buscar_producto"
+                        placeholder="Escribe el código o el nombre del producto" autocomplete="off">
+
                 </div>
                 <table style="width: 100%" class="table table-sm" id="tablaProductos">
                     <thead>
                         <tr>
-                            <th style="width: 45%">Descripción</th>
+                            <th>Descripcion</th>
                             <th style="width: 20%">Precio</th>
-                            <th style="width: 20%">Existencia</th>
+                            <th style="width: 20%">Existencias</th>
                             <th style="width: 15%"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="resultados">
 
                     </tbody>
                 </table>
@@ -112,4 +116,169 @@
     </div>
 </div>
 
+<script>
+    const buscarProducto = document.getElementById('buscar_producto');
+    const resultados = document.getElementById('resultados');
+
+    const codigoInput = document.getElementById('codigo');
+    const nombreInput = document.getElementById('nombre');
+    const precioInput = document.getElementById('precio');
+
+    const detalleVenta = document.getElementById('detalle_venta');
+
+    const totalInput = document.getElementById('total');
+
+    let productoSeleccionado;
+    let debounceTimer;
+    let datellaVenta = [];
+
+    async function fetchProducts(query) {
+        if (!query) {
+            resultados.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/productos/autocomplete/?q=${query}`);
+            const data = await response.json();
+
+            renderResults(data);
+        } catch (error) {
+            console.error('Error al buscar productos:', error);
+            resultados.innerHTML = '<p>Error al cargar resultados.</p>';
+        }
+    }
+
+    // Función para mostrar los productos en el HTML
+    function renderResults(products) {
+        resultados.innerHTML = '';
+
+        if (products.length === 0) {
+            resultados.innerHTML = '<p>No se encontraron coincidencias.</p>';
+            return;
+        }
+
+        products.forEach(product => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td>${product.nombre}</td>
+            <td>$${product.precio}</td>
+            <td>${product.stock_actual}</td>
+            <td>
+                <button class="btn btn-success btn-sm" data-dismiss="modal" aria-label="Close" onclick="obtenerProducto('${product.codigo}')">
+                    <span class="fas fa-plus"></span>
+                </button>
+            </td>
+        </tr>
+        `;
+            resultados.appendChild(tr);
+        });
+    }
+
+
+    // Evento de escucha con Debounce
+    buscarProducto.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            fetchProducts(query);
+        }, 300); // Espera 300ms después de que el usuario deja de escribir
+    });
+
+    async function obtenerProducto(codigo) {
+        try {
+            const response = await fetch(`/productos/obtener/${codigo}/`);
+            if (!response.ok) {
+                throw new Error('Producto no encontrado');
+            }
+            productoSeleccionado = await response.json();
+            // Rellenar los campos del formulario con los datos del producto seleccionado
+            codigoInput.value = productoSeleccionado.codigo;
+            nombreInput.value = productoSeleccionado.nombre;
+            precioInput.value = productoSeleccionado.precio;
+        } catch (error) {
+            console.error('Error al obtener producto:', error);
+            //return null;
+            productoSeleccionado = null;
+            codigoInput.value = '';
+            nombreInput.value = '';
+            precioInput.value = '0.00';
+        }
+    }
+
+    codigoInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const codigo = codigoInput.value.trim();
+            if (codigo) {
+                obtenerProducto(codigo);
+            }
+        }
+    });
+
+    function agregarProducto() {
+        if (!productoSeleccionado) {
+            alert('Por favor, selecciona un producto primero.');
+            return;
+        }
+
+        const cantidadInput = document.getElementById('cantidad');
+        const cantidad = parseInt(cantidadInput.value);
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            alert('Por favor, ingresa una cantidad válida.');
+            return;
+        }
+
+        const total = productoSeleccionado.precio * cantidad;
+
+        datellaVenta.push({
+            codigo: productoSeleccionado.codigo,
+            nombre: productoSeleccionado.nombre,
+            precio: productoSeleccionado.precio,
+            cantidad: cantidad,
+            total: total
+        });
+
+        // Aquí puedes agregar código para actualizar la tabla de productos en la venta y el total
+        actualizarDetalleVenta();
+        // Limpiar los campos para el siguiente producto
+        productoSeleccionado = null;
+        codigoInput.value = '';
+        nombreInput.value = '';
+        precioInput.value = '0.00';
+        cantidadInput.value = '';
+        // Actualizar el total
+        const totalVenta = datellaVenta.reduce((sum, item) => sum + item.total, 0);
+        totalInput.value = totalVenta.toFixed(2);
+    }
+
+    function actualizarDetalleVenta() {
+        detalleVenta.innerHTML = '';
+        datellaVenta.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.codigo}</td>
+                <td>${item.nombre}</td>
+                <td>$${item.precio}</td>
+                <td>${item.cantidad}</td>
+                <td>$${item.total}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">
+                        <span class="fas fa-trash"></span>
+                    </button>
+                </td>
+            `;
+            detalleVenta.appendChild(tr);
+        });
+    }
+
+    function eliminarProducto(index) {
+        datellaVenta.splice(index, 1);
+        actualizarDetalleVenta();
+    }
+
+</script>
 {% endblock %}
