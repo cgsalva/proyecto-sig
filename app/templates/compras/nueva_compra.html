@@ -6,7 +6,6 @@
 <h4>Nueva compra</h4>
 
 <form method="post" autocomplete="off">
-
     <div class="row">
         <div class="col-12 col-sm-4">
             <label>Código del producto:</label>
@@ -14,7 +13,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Escribe el código y presiona enter">
+                <input type="text" class="form-control" id="codigo" placeholder="Escribe el código y presiona enter">
                 <div class="input-group-append">
                     <button class="btn btn-light" type="button" data-toggle="modal"
                         data-target="#modalBuscarProducto"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -26,6 +25,15 @@
             <label>Nombre del producto:</label>
             <input class="form-control form-control-sm" id="nombre" name="nombre" type="text" readonly>
         </div>
+        <div class="col-12 col-sm-4 mb-3">
+            <label>Precio de venta:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-solid fa-dollar-sign"></i></span>
+                </div>
+                <input class="form-control form-control-sm" id="precio" type="number" value="0.00" step="0.01" readonly />
+            </div>
+        </div>
     </div>
 
     <div class="row">
@@ -34,30 +42,22 @@
             <input class="form-control form-control-sm" id="cantidad" type="number" min="0">
         </div>
         <div class="col-12 col-sm-4 mb-3">
-            <label>Unidad de Medida (Compra):</label>
-            <select id="inputState" class="form-control form-control-sm">
-                {% for unidad in unidades %}
-                <option value="{{ unidad.nombre }}">{{ unidad.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-12 col-sm-4 mb-3">
             <label>Precio de compra:</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-dollar-sign"></i></span>
                 </div>
-                <input class="form-control form-control-sm" type="number" value="0.00" step="0.01" />
+                <input class="form-control form-control-sm" id="precio_compra" type="number" value="0.00" step="0.01" />
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12 mb-3">
-            <button id="agregar_producto" type="button" class="btn btn-primary">Agregar Producto</button>
+            <button type="button" class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
         </div>
     </div>
 
-    <table id="tablaProductosVenta" class="table table-hover table-striped table-sm">
+    <table id="tablaProductosVenta" class="table table-hover table-sm">
         <thead class="thead-dark">
             <tr>
                 <th>#</th>
@@ -69,7 +69,7 @@
                 <th width='1%'></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="detalle_compra">
         </tbody>
     </table>
 
@@ -127,8 +127,20 @@
     const buscarProducto = document.getElementById('buscar_producto');
     const resultados = document.getElementById('resultados');
 
+    const codigoInput = document.getElementById('codigo');
+    const nombreInput = document.getElementById('nombre');
+    const precioInput = document.getElementById('precio');
+
+    const precioCompraInput = document.getElementById('precio_compra');
+    const cantidadInput = document.getElementById('cantidad');
+
+    const detalleCompra = document.getElementById('detalle_compra');
+
+    const totalInput = document.getElementById('total');
+
     let productoSeleccionado;
     let debounceTimer;
+    let detalleCompraData = [];
 
     async function fetchProducts(query) {
         if (!query) {
@@ -162,8 +174,11 @@
             <td>${product.nombre}</td>
             <td>$${product.precio}</td>
             <td>${product.stock_actual}</td>
-            <td><button class="btn btn-success btn-sm" onclick="seleccionarProducto('${product.codigo}')"><span class="fas fa-plus"></span></button></td>
-        </tr>
+            <td>
+                <button class="btn btn-success btn-sm" data-dismiss="modal" aria-label="Close" onclick="obtenerProducto('${product.codigo}')">
+                    <span class="fas fa-plus"></span>
+                </button>
+            </td>
         `;
             resultados.appendChild(tr);
         });
@@ -185,12 +200,92 @@
             if (!response.ok) {
                 throw new Error('Producto no encontrado');
             }
-            const producto = await response.json();
-            return producto;
+            productoSeleccionado = await response.json();
+            // Rellenar los campos del formulario con los datos del producto seleccionado
+            codigoInput.value = productoSeleccionado.codigo;
+            nombreInput.value = productoSeleccionado.nombre;
+            precioInput.value = productoSeleccionado.precio;
         } catch (error) {
             console.error('Error al obtener producto:', error);
+            productoSeleccionado = null;
+            codigoInput.value = '';
+            nombreInput.value = '';
+            precioInput.value = '0.00';
             return null;
         }
+    }
+
+    codigoInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const codigo = codigoInput.value.trim();
+            if (codigo) {
+                obtenerProducto(codigo);
+            }
+        }
+    });
+
+    function agregarProducto() {
+        if (!productoSeleccionado) {
+            alert('Por favor, selecciona un producto primero.');
+            return;
+        }
+
+        const cantidadInput = document.getElementById('cantidad');
+        const cantidad = parseInt(cantidadInput.value);
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            alert('Por favor, ingresa una cantidad válida.');
+            return;
+        }
+
+        const total = productoSeleccionado.precio * cantidad;
+
+        detalleCompraData.push({
+            codigo: productoSeleccionado.codigo,
+            nombre: productoSeleccionado.nombre,
+            precio: productoSeleccionado.precio,
+            cantidad: cantidad,
+            total: total
+        });
+
+        // Aquí puedes agregar código para actualizar la tabla de productos en la compra y el total
+        actualizarDetalleCompra();
+        // Limpiar los campos para el siguiente producto
+        productoSeleccionado = null;
+        codigoInput.value = '';
+        nombreInput.value = '';
+        precioInput.value = '0.00';
+        cantidadInput.value = '';
+        // Actualizar el total
+        const totalCompra = detalleCompraData.reduce((sum, item) => sum + item.total, 0);
+        totalInput.value = totalCompra.toFixed(2);
+    }
+
+    function actualizarDetalleCompra() {
+        detalleCompra.innerHTML = '';
+        detalleCompraData.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.codigo}</td>
+                <td>${item.nombre}</td>
+                <td>$${item.precio}</td>
+                <td>${item.cantidad}</td>
+                <td>$${item.total}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">
+                        <span class="fas fa-trash"></span>
+                    </button>
+                </td>
+            `;
+            detalleCompra.appendChild(tr);
+        });
+    }
+
+    function eliminarProducto(index) {
+        detalleCompraData.splice(index, 1);
+        actualizarDetalleCompra();
     }
 </script>
 {% endblock %}

@@ -59,3 +59,64 @@ class Cuenta(models.Model):
 
     def __str__(self):
         return f"{self.codigo} - {self.nombre}"
+
+# ASIENTOS CONTABLES
+
+class AsientoContable(models.Model):
+    fecha = models.DateField()
+    descripcion = models.TextField()
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fecha', '-id']
+
+    def __str__(self):
+        return f"Asiento #{self.id}"
+
+    @property
+    def total_debe(self):
+        return sum(
+            (detalle.debe for detalle in self.detalles.all()),
+            Decimal('0.00')
+        )
+
+    @property
+    def total_haber(self):
+        return sum(
+            (detalle.haber for detalle in self.detalles.all()),
+            Decimal('0.00')
+        )
+
+    @property
+    def balanceado(self):
+        return self.total_debe == self.total_haber
+
+
+class MovimientoContable(models.Model):
+    asiento = models.ForeignKey(
+        AsientoContable,
+        on_delete=models.CASCADE,
+        related_name='detalles'
+    )
+
+    cuenta = models.ForeignKey(
+        Cuenta,
+        on_delete=models.PROTECT,
+        related_name='movimientos'
+    )
+
+    debe = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    haber = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    def __str__(self):
+        return f"{self.cuenta.nombre}"
