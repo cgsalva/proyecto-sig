@@ -3,23 +3,62 @@
 {% block title %}Asientos contables{% endblock %}
 
 {% block content %}
-<h4>Asientos contables</h4>
+<h4>Libro diario</h4>
+<div class="mb-3">
+    <a href="{% url 'crear_asiento' %}" class="btn btn-info">
+        Agregar
+    </a>
+    <a href="#" class="btn btn-success">Generar reporte</a>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
         <thead>
             <tr>
+                <th></th>
+                <th>ID Asiento</th>
                 <th>Fecha</th>
-                <th>Descripción</th>
+                <th>Glosa</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {% for asiento in asientos %}
             <tr>
-                <td>{{ asiento.fecha }}</td>
-                <td>{{ asiento.descripcion }}</td>
+                <td></td>
+            <td>1</td>
+            <td>23-05-2026</td>
+            <td>Hola</td>
+            <td>h</td>
             </tr>
-            {% endfor %}
+            <tr>
+                <td colspan="5">
+                    <div>
+                        <table class="table table-bordered table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th width="30%">Cuenta</th>
+                                    <th width="30%">Debe</th>
+                                    <th width="30%">Haber</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1001 - Caja</td>
+                                    <td>100.00</td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td>4001 - Ventas</td>
+                                    <td></td>
+                                    <td>100.00</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

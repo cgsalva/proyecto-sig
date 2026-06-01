@@ -26,3 +26,15 @@ def listar_asientos(request):
         "asientos": asientos
     })
 
+@login_required
+def crear_asiento(request):
+    if request.method == 'POST':
+        form = AsientoContableForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_asientos')
+    else:
+        form = AsientoContableForm()
+    return render(request, "asientos/crear_asiento.html", {
+        "form": form
+    })

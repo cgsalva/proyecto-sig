@@ -120,3 +120,74 @@ class MovimientoContable(models.Model):
 
     def __str__(self):
         return f"{self.cuenta.nombre}"
+
+# =========================
+# COMPRAS
+# =========================
+
+class Compra(models.Model):
+
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    total = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    def __str__(self):
+        return f"Compra #{self.id}"
+
+    def calcular_totales(self):
+
+        subtotal = Decimal('0.00')
+
+        for detalle in self.detalles.all():
+            subtotal += detalle.subtotal
+
+        self.subtotal = subtotal
+
+        self.impuesto = subtotal * Decimal('0.13')
+
+        self.total = self.subtotal + self.impuesto
+
+        self.save()
+
+
+class DetalleCompra(models.Model):
+
+    compra = models.ForeignKey(
+        Compra,
+        on_delete=models.CASCADE,
+        related_name='detalles'
+    )
+
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT,
+        related_name='detalle_compras'
+    )
+
+    cantidad = models.IntegerField()
+
+    costo_unitario = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    subtotal = models.DecimalField(
+        max_digits=12,
+        decimal_places=2
+    )
+
+    def save(self, *args, **kwargs):
+
+        self.subtotal = (
+            Decimal(self.cantidad) *
+            self.costo_unitario
+        )
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.producto.nombre

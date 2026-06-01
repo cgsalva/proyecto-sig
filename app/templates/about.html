@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Integrantes{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+
+    <!-- ENCABEZADO -->
+    <div class="text-center mb-2">
+        <h1 class="fw-bold">Sistema de Gestión Financiero</h1>
+        <p class="text-muted">
+            Proyecto académico desarrollado para la asignatura
+            <strong>Sistemas de Información Gerencial (SGI135)</strong>
+        </p>
+    </div>
+
+    <!-- TECNOLOGÍAS -->
+    <div class="card shadow-sm mb-5">
+
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Tecnologías Utilizadas</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <!-- PYTHON -->
+                <div class="col-md-4 mb-3">
+                    <div class="border rounded p-3 h-100 text-center">
+
+                        <img src="{% static 'images/python_icon.png' %}" alt="Python" class="img-fluid mb-3"
+                            style="height: 80px;">
+
+                        <h5>Python</h5>
+
+                        <p class="mb-0">
+                            Lenguaje de programación utilizado para implementar
+                            la lógica de negocio y el funcionamiento general
+                            del sistema.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- DJANGO -->
+                <div class="col-md-4 mb-3">
+                    <div class="border rounded p-3 h-100 text-center">
+
+                        <img src="{% static 'images/django_icon.png' %}" alt="Django" class="img-fluid mb-3"
+                            style="height: 80px;">
+
+                        <h5>Django</h5>
+
+                        <p class="mb-0">
+                            Framework web utilizado para el desarrollo del
+                            backend, gestión de modelos, vistas, plantillas
+                            y seguridad de la aplicación.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- POSTGRESQL -->
+                <div class="col-md-4 mb-3">
+                    <div class="border rounded p-3 h-100 text-center">
+
+                        <img src="{% static 'images/postgresql_icon.png' %}" alt="PostgreSQL" class="img-fluid mb-3"
+                            style="height: 80px;">
+
+                        <h5>PostgreSQL</h5>
+
+                        <p class="mb-0">
+                            Sistema gestor de bases de datos utilizado para
+                            almacenar de forma segura toda la información
+                            financiera y operativa.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+  
+
+    <!-- INTEGRANTES -->
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Integrantes del Grupo</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 col-lg-3 mb-4">
+
+                    <div class="card h-100 border-primary">
+
+                        <div class="card-body text-center">
+
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-4x text-primary"></i>
+                            </div>
+
+                            <h5 class="card-title">
+                                Juan Pérez
+                            </h5>
+
+                            <p class="text-muted">
+                                Coordinador del Proyecto
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-4">
+
+                    <div class="card h-100 border-success">
+
+                        <div class="card-body text-center">
+
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-4x text-success"></i>
+                            </div>
+
+                            <h5 class="card-title">
+                                María López
+                            </h5>
+
+                            <p class="text-muted">
+                                Desarrollo Backend
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-4">
+
+                    <div class="card h-100 border-warning">
+
+                        <div class="card-body text-center">
+
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-4x text-warning"></i>
+                            </div>
+
+                            <h5 class="card-title">
+                                Carlos Rodríguez
+                            </h5>
+
+                            <p class="text-muted">
+                                Base de Datos
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-lg-3 mb-4">
+
+                    <div class="card h-100 border-danger">
+
+                        <div class="card-body text-center">
+
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-4x text-danger"></i>
+                            </div>
+
+                            <h5 class="card-title">
+                                Ana Martínez
+                            </h5>
+
+                            <p class="text-muted">
+                                Diseño y Documentación
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
