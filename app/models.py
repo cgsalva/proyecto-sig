@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -126,10 +127,9 @@ class MovimientoContable(models.Model):
 # =========================
 
 class Compra(models.Model):
-
     fecha = models.DateTimeField(auto_now_add=True)
 
-    total = models.DecimalField(
+    costo_total = models.DecimalField(
         max_digits=12,
         decimal_places=2,
         default=0
@@ -138,24 +138,8 @@ class Compra(models.Model):
     def __str__(self):
         return f"Compra #{self.id}"
 
-    def calcular_totales(self):
-
-        subtotal = Decimal('0.00')
-
-        for detalle in self.detalles.all():
-            subtotal += detalle.subtotal
-
-        self.subtotal = subtotal
-
-        self.impuesto = subtotal * Decimal('0.13')
-
-        self.total = self.subtotal + self.impuesto
-
-        self.save()
-
 
 class DetalleCompra(models.Model):
-
     compra = models.ForeignKey(
         Compra,
         on_delete=models.CASCADE,
@@ -168,9 +152,73 @@ class DetalleCompra(models.Model):
         related_name='detalle_compras'
     )
 
-    cantidad = models.IntegerField()
-
     costo_unitario = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    cantidad = models.PositiveIntegerField()
+
+    subtotal = models.DecimalField(
+        max_digits=12,
+        decimal_places=2
+    )
+
+    def save(self, *args, **kwargs):
+        self.subtotal = self.costo_unitario * self.cantidad
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.producto.codigo} - {self.producto.nombre}"
+
+
+class Venta(models.Model):
+
+    fecha = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='ventas'
+    )
+
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.PROTECT,
+        related_name='ventas',
+        null=True,
+        blank=True
+    )
+
+    total = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    def __str__(self):
+        return f"Venta #{self.id}"
+
+
+class DetalleVenta(models.Model):
+
+    venta = models.ForeignKey(
+        Venta,
+        on_delete=models.CASCADE,
+        related_name='detalles'
+    )
+
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT,
+        related_name='detalle_ventas'
+    )
+
+    cantidad = models.PositiveIntegerField()
+
+    precio_unitario = models.DecimalField(
         max_digits=10,
         decimal_places=2
     )
@@ -181,13 +229,8 @@ class DetalleCompra(models.Model):
     )
 
     def save(self, *args, **kwargs):
-
-        self.subtotal = (
-            Decimal(self.cantidad) *
-            self.costo_unitario
-        )
-
+        self.subtotal = self.cantidad * self.precio_unitario
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.producto.nombre
+        return f"{self.producto.codigo} - {self.producto.nombre}"

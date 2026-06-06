@@ -1,8 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Productos{% endblock %}
+{% block title %}Compras{% endblock %}
 
 {% block content %}
 <h4>Compras</h4>
 
+<div class="mb-3">
+    <a href="{% url 'crear_compra' %}" class="btn btn-info">
+        Agregar
+    </a>
+    <a href="#" class="btn btn-success">Generar reporte</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th width="3%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for compra in compras %}
+            <tr>
+                <td>{{ compra.id }}</td>
+                <td>{{ compra.fecha }}</td>
+                <td>${{ compra.costo_total }}</td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-sm">
+                        Ver
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
