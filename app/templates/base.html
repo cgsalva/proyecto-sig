@@ -93,8 +93,8 @@
 
                 <div class="dropdown-menu" aria-labelledby="pagesDropdown">
                     <a class="dropdown-item" href="{% url 'listar_cuentas' %}">Catálogo de cuentas</a>
-                    <a class="dropdown-item" href="{% url 'listar_asientos' %}">Asientos contables</a>
-                    <a class="dropdown-item" href="#">Libro diario</a>
+                    <a class="dropdown-item" href="{% url 'listar_asientos' %}">Libro diario</a>
+                    <a class="dropdown-item" href="#">Libro mayor</a>
                     <a class="dropdown-item" href="#">Balance general</a>
                     <a class="dropdown-item" href="#">Estado de resultados</a>
                 </div>
@@ -158,7 +158,8 @@
         <footer class="sticky-footer h-auto">
             <div class="container my-3">
                 <div class="copyright text-center">
-                    <span>Sistema de Gestión Financiero | SGI135 2026 | <a href="{% url 'about' %}">Acerca del sistema</a></span>
+                    <span>Sistema de Gestión Financiero | SGI135 2026 | <a href="{% url 'about' %}">Acerca del
+                            sistema</a></span>
                 </div>
             </div>
         </footer>
@@ -203,7 +204,9 @@
                 "colvis": "Visibilidad"
             }
         }
-        $('#dataTable').DataTable({ language: spanish });
+        $('#dataTable').DataTable({
+            language: spanish,
+        });
         console.log('DataTable initialized');
     </script>
 

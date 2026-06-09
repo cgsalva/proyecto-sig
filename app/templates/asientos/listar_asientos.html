@@ -6,7 +6,7 @@
 <h4>Libro diario</h4>
 <div class="mb-3">
     <a href="{% url 'crear_asiento' %}" class="btn btn-info">
-        Agregar
+        Crear asiento
     </a>
     <a href="#" class="btn btn-success">Generar reporte</a>
 </div>
@@ -14,51 +14,26 @@
     <table class="table table-bordered table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
         <thead>
             <tr>
-                <th></th>
-                <th>ID Asiento</th>
+                <th>Asiento</th>
                 <th>Fecha</th>
                 <th>Glosa</th>
-                <th></th>
+                <th>Cuenta</th>
+                <th>Debe</th>
+                <th>Haber</th>
             </tr>
         </thead>
         <tbody>
+
+            {% for movimiento in movimientos %}
             <tr>
-                <td></td>
-            <td>1</td>
-            <td>23-05-2026</td>
-            <td>Hola</td>
-            <td>h</td>
+                <td>{{ movimiento.asiento.id }}</td>
+                <td>{{ movimiento.asiento.fecha }}</td>
+                <td>{{ movimiento.asiento.descripcion }}</td>
+                <td>{{ movimiento.cuenta.codigo }} - {{ movimiento.cuenta.nombre }}</td>
+                <td>{{ movimiento.debe|default:"" }}</td>
+                <td>{{ movimiento.haber|default:"" }}</td>
             </tr>
-            <tr>
-                <td colspan="5">
-                    <div>
-                        <table class="table table-bordered table-sm mb-0">
-                            <thead>
-                                <tr>
-                                    <th width="30%">Cuenta</th>
-                                    <th width="30%">Debe</th>
-                                    <th width="30%">Haber</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1001 - Caja</td>
-                                    <td>100.00</td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td>4001 - Ventas</td>
-                                    <td></td>
-                                    <td>100.00</td>
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                </td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

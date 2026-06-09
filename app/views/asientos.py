@@ -1,8 +1,6 @@
 from decimal import Decimal
-
 from django.contrib import messages
 from django.db import transaction
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django import forms
@@ -26,9 +24,9 @@ class AsientoContableForm(forms.ModelForm):
 
 @login_required
 def listar_asientos(request):
-    asientos = AsientoContable.objects.all()
+    movimientos = MovimientoContable.objects.all()
     return render(request, "asientos/listar_asientos.html", {
-        "asientos": asientos
+        "movimientos": movimientos
     })
 
 @login_required
